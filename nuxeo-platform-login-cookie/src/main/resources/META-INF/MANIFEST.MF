@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Nuxeo HTTP Cookie Access Authentication Login Module extension
+Bundle-SymbolicName: org.nuxeo.ecm.platform.login.cookie;singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: org.nuxeo.ecm.platform.login, org.nuxeo.ecm.webengine.core
+Nuxeo-Component: OSGI-INF/cookie-auth-contrib.xml,
+ OSGI-INF/cookie-auth-schema-contrib.xml,
+ OSGI-INF/cookie-auth-directory-contrib.xml
