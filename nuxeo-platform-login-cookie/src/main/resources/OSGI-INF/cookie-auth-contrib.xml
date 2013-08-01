@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.nuxeo.ecm.platform.ui.web.auth.cookie">
+
+	<require>org.nuxeo.ecm.platform.ui.web.auth.WebEngineConfig</require>
+
+	<extension target="org.nuxeo.ecm.platform.ui.web.auth.service.PluggableAuthenticationService" point="authenticators">
+
+		<authenticationPlugin name="COOKIE_AUTH" enabled="true"
+			class="org.nuxeo.ecm.ui.web.auth.cookie.CookieFormAuthenticator">
+			<needStartingURLSaving>true</needStartingURLSaving>
+			<parameters>
+				<parameter name="LoginPage">login.jsp</parameter>
+				<parameter name="UsernameKey">user_name</parameter>
+				<parameter name="PasswordKey">user_password</parameter>
+				<parameter name="RemembermeKey">remember_me</parameter>
+				<parameter name="AuthCookieName">auth_cookie_name</parameter>
+				<parameter name="AuthCookieDuration">31</parameter>
+				<parameter name="AuthCookieDurationRefresh">false</parameter>
+			</parameters>
+		</authenticationPlugin>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.ui.web.auth.service.PluggableAuthenticationService" point="chain">
+
+		<authenticationChain>
+			<plugins>
+				<plugin>BASIC_AUTH</plugin>
+				<plugin>COOKIE_AUTH</plugin>
+				<plugin>FORM_AUTH</plugin>
+				<plugin>WEBENGINE_FORM_AUTH</plugin>
+				<plugin>ANONYMOUS_AUTH</plugin>
+				<plugin>WEBSERVICES_AUTH</plugin>
+			</plugins>
+		</authenticationChain>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.ui.web.auth.service.PluggableAuthenticationService" point="openUrl">
+		<openUrl name="sharedURL">
+			<grantPattern>
+				${org.nuxeo.ecm.contextPath}/restAPI/.*/imaDownloadFile
+			</grantPattern>
+		</openUrl>
+	</extension>
+
+</component>
