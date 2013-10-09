@@ -12,14 +12,12 @@
  * Lesser General Public License for more details.
  *
  * Contributors:
- *     Gagnavarslan ehf
+ *     Thomas Haines
  */
 package org.nuxeo.ecm.ui.web.auth.digest;
 
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,12 +25,6 @@ import org.junit.Test;
  * Nuxeo Authenticator for HTTP Digest Access Authentication (RFC 2617).
  */
 public class DigestAuthenticatorTest {
-  protected static final String COMMA_SEPARATOR = ",";
-  protected static final String QUOTE = "\"";
-  protected static final String EQUAL_SEPARATOR = "=";
-
-  private static final Log log = LogFactory
-      .getLog(DigestAuthenticatorTest.class);
 
   @Test
   public void testWithComma() {
