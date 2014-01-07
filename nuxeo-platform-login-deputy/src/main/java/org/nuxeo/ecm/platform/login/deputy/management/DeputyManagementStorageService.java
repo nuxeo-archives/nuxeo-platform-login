@@ -23,10 +23,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DataModel;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -39,6 +40,8 @@ import org.nuxeo.ecm.directory.api.DirectoryService;
 import org.nuxeo.runtime.api.Framework;
 
 public class DeputyManagementStorageService implements DeputyManager {
+
+    protected static final Log log = LogFactory.getLog(DeputyManagementService.class);
 
     private static final String DIR_NAME = "deputies";
 
@@ -56,10 +59,12 @@ public class DeputyManagementStorageService implements DeputyManager {
 
     private DirectoryService directoryService;
 
+
     private Session dirSession;
 
     private String directorySchema;
 
+    @Override
     public String getDeputySchemaName() {
         return directorySchema;
     }
@@ -119,6 +124,7 @@ public class DeputyManagementStorageService implements DeputyManager {
 
     }
 
+    @Override
     public List<String> getPossiblesAlternateLogins(String userName)
             throws ClientException {
         List<String> users = new ArrayList<String>();
@@ -174,6 +180,7 @@ public class DeputyManagementStorageService implements DeputyManager {
         }
     }
 
+    @Override
     public List<String> getAvalaibleDeputyIds(String userName)
             throws ClientException {
         List<String> deputies = new ArrayList<String>();
@@ -187,6 +194,7 @@ public class DeputyManagementStorageService implements DeputyManager {
         return deputies;
     }
 
+    @Override
     public List<DocumentModel> getAvalaibleMandates(String userName)
             throws ClientException {
         List<DocumentModel> deputies = new ArrayList<DocumentModel>();
@@ -207,6 +215,7 @@ public class DeputyManagementStorageService implements DeputyManager {
 
     }
 
+    @Override
     public DocumentModel newMandate(String username, String deputy)
             throws ClientException {
 
@@ -238,6 +247,7 @@ public class DeputyManagementStorageService implements DeputyManager {
         return entry;
     }
 
+    @Override
     public DocumentModel newMandate(String username, String deputy,
             Calendar start, Calendar end) throws ClientException {
 
@@ -254,6 +264,7 @@ public class DeputyManagementStorageService implements DeputyManager {
         }
     }
 
+    @Override
     public void addMandate(DocumentModel entry) throws ClientException {
 
         initPersistentService();
@@ -272,15 +283,15 @@ public class DeputyManagementStorageService implements DeputyManager {
             dirSession.createEntry(entry);
 
             dirSession.commit();
-        } catch (Throwable e) {
-            System.out.println(e);
-        }
-            finally {
+        } catch (DirectoryException cause) {
+            log.error("Cannot access to deputies directory", cause);
+        } finally {
             releasePersistenceService();
         }
         return;
     }
 
+    @Override
     public void removeMandate(String username, String deputy)
             throws ClientException {
 

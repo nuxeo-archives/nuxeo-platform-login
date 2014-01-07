@@ -19,18 +19,23 @@
 
 package org.nuxeo.ecm.platform.login.deputy.management.tests;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.nuxeo.ecm.core.storage.sql.ra.PoolingRepositoryFactory;
 import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.ecm.core.test.TransactionalFeature;
+import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.login.deputy.management.DeputyManagementStorageService;
 import org.nuxeo.ecm.platform.login.deputy.management.DeputyManager;
 import org.nuxeo.runtime.test.runner.Deploy;
@@ -44,17 +49,24 @@ import com.google.inject.Inject;
 @RunWith(FeaturesRunner.class)
 @Features({ TransactionalFeature.class, CoreFeature.class })
 @Deploy( {
+    "org.nuxeo.runtime.jtajca",
     "org.nuxeo.runtime.datasource",
 	"org.nuxeo.ecm.directory",
 	"org.nuxeo.ecm.directory.sql",
 	"org.nuxeo.ecm.directory.types.contrib",
-	"org.nuxeo.ecm.platform.login.deputy.management"
+	"org.nuxeo.ecm.platform.login.deputy.management",
+	"org.nuxeo.runtime.metrics",
+	"org.nuxeo.ecm.core.management.jtajca"
 })
 @LocalDeploy("org.nuxeo.ecm.platform.login.deputy.management:datasource-contrib.xml")
+@RepositoryConfig(repositoryFactoryClass=PoolingRepositoryFactory.class)
 public class TestCanPersistDeputyMandates {
 
     @Inject DeputyManager dm;
 
+    @BeforeClass public static void setSingleDatasourceMode() {
+        System.setProperty("nuxeo.test.vcs.singleds", "true");
+    }
 
     @Before public void initStorage() throws Exception {
         ((DeputyManagementStorageService) dm).resetDeputies();
