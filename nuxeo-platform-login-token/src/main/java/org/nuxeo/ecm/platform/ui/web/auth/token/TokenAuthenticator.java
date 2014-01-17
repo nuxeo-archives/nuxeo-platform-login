@@ -45,6 +45,8 @@ import org.nuxeo.runtime.api.Framework;
  */
 public class TokenAuthenticator implements NuxeoAuthenticationPlugin {
 
+    private static final String LOOPBACK_IP = "127.0.0.1";
+
     private static final String HTTPS = "https";
 
     private static final String LOCALHOST = "localhost";
@@ -133,7 +135,8 @@ public class TokenAuthenticator implements NuxeoAuthenticationPlugin {
      * @since 5.9.2
      */
     private boolean isAllowedToUseCookieToken(HttpServletRequest req) {
-        if (LOCALHOST.equals(req.getServerName())) {
+        String serverName = req.getServerName();
+        if (LOCALHOST.equals(serverName) || LOOPBACK_IP.equals(serverName)) {
             return true;
         }
         return HTTPS.equals(req.getScheme());
